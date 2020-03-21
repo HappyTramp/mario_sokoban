@@ -3,8 +3,17 @@
 
 int main()
 {
-    Game game;
-    Graphics graphics(game, "mario sokoban", 640, 480);
+    Game game(
+        "##########\n"
+        "#     m  #\n"
+        "#  *     #\n"
+        "#        #\n"
+        "#    U   #\n"
+        "#        #\n"
+        "##########\n"
+    );
+
+    Graphics graphics(game, "mario sokoban", 500, 500);
 
     while (graphics.isRunning())
         graphics.update();

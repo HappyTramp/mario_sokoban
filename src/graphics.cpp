@@ -37,7 +37,31 @@ void Graphics::update()
 
 void Graphics::drawGame()
 {
+    for (size_t i = 0; i < m_game.getHeight(); i++)
+        for (size_t j = 0; j < m_game.getWidth(); j++)
+            drawCell(m_game.get(i, j), i, j);
+}
 
+void Graphics::drawCell(Game::Cell cell, int y, int x)
+{
+    SDL_Rect r;
+
+    switch (cell)
+    {
+        case Game::CellWall:
+            SDL_SetRenderDrawColor(m_renderer, 40, 40, 100, 255);
+            break;
+        case Game::CellEmpty:
+            SDL_SetRenderDrawColor(m_renderer, 10, 10, 10, 255);
+            break;
+        default:
+            SDL_SetRenderDrawColor(m_renderer, 150, 150, 150, 255);
+    }
+    r.x = x * (m_width / m_game.getWidth());
+    r.y = y * (m_height / m_game.getHeight());
+    r.w = m_width / m_game.getWidth();
+    r.h = m_height / m_game.getHeight();
+    SDL_RenderFillRect(m_renderer, &r);
 }
 
 void Graphics::handleEvent()

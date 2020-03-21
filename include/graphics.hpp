@@ -8,14 +8,14 @@
 
 class Graphics
 {
-    public:
+public:
     Graphics(Game &game, std::string title, int width, int height);
     ~Graphics();
 
     void update();
     bool isRunning() const;
 
-    private:
+private:
     bool         m_running;
     Game         &m_game;
     std::string  m_title;
@@ -25,6 +25,7 @@ class Graphics
     SDL_Window   *m_window;
 
     void        drawGame();
+    void        drawCell(Game::Cell cell, int y, int x);
     void        handleEvent();
     void        error() const;
 };
