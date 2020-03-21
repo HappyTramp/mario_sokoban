@@ -13,6 +13,7 @@ Graphics::Graphics(Game &game, std::string title, int width, int height):
         error();
     m_wallTex = loadImage("sprite/wall.jpg");
     m_crateTex = loadImage("sprite/crate.jpg");
+    m_crateSolvedTex = loadImage("sprite/crate_solved.jpg");
     m_payloadTex = loadImage("sprite/payload.png");
     m_playerTex = loadImage("sprite/mario_down.gif");
 }
@@ -21,6 +22,7 @@ Graphics::~Graphics()
 {
     SDL_DestroyTexture(m_playerTex);
     SDL_DestroyTexture(m_payloadTex);
+    SDL_DestroyTexture(m_crateSolvedTex);
     SDL_DestroyTexture(m_crateTex);
     SDL_DestroyTexture(m_wallTex);
     SDL_DestroyRenderer(m_renderer);
@@ -72,6 +74,9 @@ void Graphics::drawCell(Game::Cell cell, int y, int x)
         case Game::CellCrate:
             putImage(m_crateTex, &r);
             break;
+        case Game::CellCrateSolved:
+            putImage(m_crateSolvedTex, &r);
+            break;
         case Game::CellPayload:
             SDL_SetRenderDrawColor(m_renderer, 100, 100, 100, 255);
             SDL_RenderFillRect(m_renderer, &r);
@@ -93,7 +98,6 @@ void Graphics::drawPlayer()
     r.w = m_width / m_game.getWidth();
     r.h = m_height / m_game.getHeight();
     putImage(m_playerTex, &r);
-
 }
 
 void Graphics::handleEvent()
@@ -123,6 +127,8 @@ void Graphics::handleEvent()
                         m_game.move(Game::DirectionRight);
                         break;
                 }
+                if (m_game.won())
+                    m_running = false;
         }
     }
 }

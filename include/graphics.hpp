@@ -26,6 +26,7 @@ private:
     SDL_Window   *m_window;
     SDL_Texture  *m_wallTex;
     SDL_Texture  *m_crateTex;
+    SDL_Texture  *m_crateSolvedTex;
     SDL_Texture  *m_payloadTex;
     SDL_Texture  *m_playerTex;
 

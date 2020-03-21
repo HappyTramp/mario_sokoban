@@ -29,10 +29,12 @@ Game::Game(std::string fmt)
                     m_grid[i][j] = CellWall;
                     break;
                 case CRATE_CHAR:
-                    m_grid[i][j] = CellCrate;
+                    m_grid[i][j] = CellEmpty;
+                    m_cratePos.push_back(makePos(i, j));
                     break;
                 case PAYLOAD_CHAR:
-                    m_grid[i][j] = CellPayload;
+                    m_grid[i][j] = CellEmpty;
+                    m_payloadPos.push_back(makePos(i, j));
                     break;
                 case MARIO_CHAR:
                     m_grid[i][j] = CellEmpty;
@@ -40,7 +42,6 @@ Game::Game(std::string fmt)
                     m_playerPos.x = j;
                     break;
                 default:
-                    m_grid[i][j] = CellEmpty;
                     exit(1);
             }
         }
@@ -55,9 +56,18 @@ Game::~Game()
     delete []m_grid;
 }
 
+bool Game::won()
+{
+    for (std::vector<Position>::iterator it = m_payloadPos.begin(); it != m_payloadPos.end(); it++)
+        if (std::find(m_cratePos.begin(), m_cratePos.end(), *it) == m_cratePos.end())
+            return false;
+    return true;
+}
+
 void Game::move(Direction direction)
 {
     m_playerDirection = direction;
+    Position saved = m_playerPos;
     switch (direction)
     {
         case DirectionUp:
@@ -72,11 +82,38 @@ void Game::move(Direction direction)
         case DirectionRight:
             m_playerPos.x++;
     }
+    if (!validPosition(m_playerPos) || get(m_playerPos) == CellWall)
+    {
+        m_playerPos = saved;
+        return;
+    }
+
+    if (get(m_playerPos) == CellCrate || get(m_playerPos) == CellCrateSolved)
+    {
+        if (!tryMoveCrate(*std::find(
+                m_cratePos.begin(), m_cratePos.end(), m_playerPos),
+                direction))
+            m_playerPos = saved;
+    }
 }
 
 Game::Cell Game::get(int y, int x) const
 {
-    return m_grid[y][x];
+    return get(makePos(y, x));
+}
+
+Game::Cell Game::get(const Position pos) const
+{
+    bool isCrate = std::find(m_cratePos.begin(), m_cratePos.end(), pos) != m_cratePos.end();
+    bool isPayload = std::find(m_payloadPos.begin(), m_payloadPos.end(), pos) != m_payloadPos.end();
+
+    if (isCrate && isPayload)
+        return CellCrateSolved;
+    if (isCrate)
+        return CellCrate;
+    if (isPayload)
+        return CellPayload;
+    return m_grid[pos.y][pos.x];
 }
 
 size_t Game::getHeight() const
@@ -92,4 +129,55 @@ size_t Game::getWidth() const
 Game::Position const &Game::getPlayer() const
 {
     return m_playerPos;
+}
+
+#include <iostream>
+bool Game::tryMoveCrate(Position &pos, Direction direction)
+{
+    Position clone = pos;
+
+    switch (direction)
+    {
+        case DirectionUp:
+            clone.y--;
+            break;
+        case DirectionDown:
+            clone.y++;
+            break;
+        case DirectionLeft:
+            clone.x--;
+            break;
+        case DirectionRight:
+            clone.x++;
+    }
+    // std::cout << pos.y << ", " << pos.x << "\n";
+    // std::cout << get(pos) << std::endl;
+    if (!validPosition(clone) || get(clone) == CellCrate || get(clone) == CellWall)
+        return false;
+    pos = clone;
+    return true;
+}
+
+bool Game::validPosition(Position pos)
+{
+    return pos.x < m_width && pos.y < m_height; // < 0 overflow
+}
+
+Game::Position Game::makePos(int y, int x)
+{
+    Position p;
+
+    p.y = y;
+    p.x = x;
+    return p;
+}
+
+bool operator==(Game::Position const &a, Game::Position const &b)
+{
+    return a.x == b.x && a.y == b.y;
+}
+
+bool operator!=(Game::Position const &a, Game::Position const &b)
+{
+    return !(a == b);
 }
