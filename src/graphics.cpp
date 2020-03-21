@@ -15,12 +15,18 @@ Graphics::Graphics(Game &game, std::string title, int width, int height):
     m_crateTex = loadImage("sprite/crate.jpg");
     m_crateSolvedTex = loadImage("sprite/crate_solved.jpg");
     m_payloadTex = loadImage("sprite/payload.png");
-    m_playerTex = loadImage("sprite/mario_down.gif");
+    m_playerUpTex = loadImage("sprite/mario_up.gif");
+    m_playerDownTex = loadImage("sprite/mario_down.gif");
+    m_playerLeftTex = loadImage("sprite/mario_left.gif");
+    m_playerRightTex = loadImage("sprite/mario_right.gif");
 }
 
 Graphics::~Graphics()
 {
-    SDL_DestroyTexture(m_playerTex);
+    SDL_DestroyTexture(m_playerRightTex);
+    SDL_DestroyTexture(m_playerLeftTex);
+    SDL_DestroyTexture(m_playerDownTex);
+    SDL_DestroyTexture(m_playerUpTex);
     SDL_DestroyTexture(m_payloadTex);
     SDL_DestroyTexture(m_crateSolvedTex);
     SDL_DestroyTexture(m_crateTex);
@@ -97,7 +103,21 @@ void Graphics::drawPlayer()
     r.y = pos.y * (m_height / m_game.getHeight());
     r.w = m_width / m_game.getWidth();
     r.h = m_height / m_game.getHeight();
-    putImage(m_playerTex, &r);
+    switch (m_game.getPlayerDirection())
+    {
+        case Game::DirectionUp:
+            putImage(m_playerUpTex, &r);
+            break;
+        case Game::DirectionDown:
+            putImage(m_playerDownTex, &r);
+            break;
+        case Game::DirectionLeft:
+            putImage(m_playerLeftTex, &r);
+            break;
+        case Game::DirectionRight:
+            putImage(m_playerRightTex, &r);
+            break;
+    }
 }
 
 void Graphics::handleEvent()

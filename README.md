@@ -3,11 +3,14 @@
 Mario sokoban project of [openclassrooms](https://openclassrooms.com/fr/courses/19980-apprenez-a-programmer-en-c/18709-tp-mario-sokoban)
 (in C++ instead of C because I can't be bothered).
 
+![screenshot](./screenshot.png)
+
 # Usage
 
 ```
 make all
 ./mario_sokoban
+./mario_sokoban [mapfile]
 ```
 
 # Dependencies

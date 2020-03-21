@@ -1,6 +1,8 @@
 #ifndef GAME_HPP
 # define GAME_HPP
 
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -9,6 +11,7 @@ class Game
 {
 public:
     Game(std::string fmt);
+    Game(std::ifstream &file);
     ~Game();
 
     enum Direction
@@ -40,6 +43,7 @@ public:
     size_t   getHeight() const;
     size_t   getWidth() const;
     Position const &getPlayer() const;
+    Direction getPlayerDirection() const;
 
 private:
 
@@ -51,8 +55,11 @@ private:
     std::vector<Position> m_cratePos;
     std::vector<Position> m_payloadPos;
 
+    void construct(std::string fmt);
+    void findWidth(std::string fmt);
     bool tryMoveCrate(Position &pos, Direction direction);
     bool validPosition(Position pos);
+
     static Position makePos(int y, int x);
 };
 

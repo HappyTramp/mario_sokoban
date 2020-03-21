@@ -28,7 +28,10 @@ private:
     SDL_Texture  *m_crateTex;
     SDL_Texture  *m_crateSolvedTex;
     SDL_Texture  *m_payloadTex;
-    SDL_Texture  *m_playerTex;
+    SDL_Texture  *m_playerUpTex;
+    SDL_Texture  *m_playerDownTex;
+    SDL_Texture  *m_playerLeftTex;
+    SDL_Texture  *m_playerRightTex;
 
     void        drawGame();
     void        drawCell(Game::Cell cell, int y, int x);
