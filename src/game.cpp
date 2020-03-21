@@ -45,6 +45,7 @@ void Game::move(Direction direction)
 {
     m_playerDirection = direction;
     Position saved = m_playerPos;
+    std::vector<Position> cratePosSaved = m_cratePos;
     switch (direction)
     {
         case DirectionUp:
@@ -64,14 +65,30 @@ void Game::move(Direction direction)
         m_playerPos = saved;
         return;
     }
-
     if (get(m_playerPos) == CellCrate || get(m_playerPos) == CellCrateSolved)
-    {
         if (!tryMoveCrate(*std::find(
                 m_cratePos.begin(), m_cratePos.end(), m_playerPos),
                 direction))
+        {
             m_playerPos = saved;
-    }
+            return;
+        }
+    m_history.push(std::make_pair(saved, cratePosSaved));
+}
+
+void Game::undo()
+{
+    if (m_history.size() < 1)
+        return;
+    m_playerPos = m_history.top().first;
+    m_cratePos = m_history.top().second;
+    m_history.pop();
+}
+
+void Game::reset()
+{
+    while (m_history.size() > 0)
+        undo();
 }
 
 Game::Cell Game::get(int y, int x) const

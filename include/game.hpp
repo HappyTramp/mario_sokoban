@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <stack>
 #include <algorithm>
 
 class Game
@@ -38,6 +39,8 @@ public:
 
     bool     won();
     void     move(Direction direction);
+    void     undo();
+    void     reset();
     Cell     get(int y, int x) const;
     Cell     get(Position pos) const;
     size_t   getHeight() const;
@@ -54,6 +57,7 @@ private:
     Direction m_playerDirection;
     std::vector<Position> m_cratePos;
     std::vector<Position> m_payloadPos;
+    std::stack< std::pair<Position, std::vector<Position> > > m_history;
 
     void construct(std::string fmt);
     void findWidth(std::string fmt);

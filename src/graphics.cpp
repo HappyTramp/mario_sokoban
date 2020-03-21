@@ -134,6 +134,9 @@ void Graphics::handleEvent()
             case SDL_KEYDOWN:
                 switch (e.key.keysym.sym)
                 {
+                    case SDLK_ESCAPE:
+                        m_running = false;
+                        break;
                     case SDLK_UP:
                         m_game.move(Game::DirectionUp);
                         break;
@@ -145,6 +148,12 @@ void Graphics::handleEvent()
                         break;
                     case SDLK_RIGHT:
                         m_game.move(Game::DirectionRight);
+                        break;
+                    case SDLK_BACKSPACE:
+                        m_game.undo();
+                        break;
+                    case SDLK_r:
+                        m_game.reset();
                         break;
                 }
                 if (m_game.won())
