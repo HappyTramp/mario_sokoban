@@ -4,13 +4,13 @@
 int main()
 {
     Game game(
-        "##########\n"
-        "#     m  #\n"
-        "#  *     #\n"
-        "#        #\n"
-        "#    U   #\n"
-        "#        #\n"
-        "##########\n"
+        "#######\n"
+        "#   m #\n"
+        "#*    #\n"
+        "#     #\n"
+        "#  U  #\n"
+        "#     #\n"
+        "#######\n"
     );
 
     Graphics graphics(game, "mario sokoban", 500, 500);

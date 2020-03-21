@@ -6,8 +6,8 @@
 #define PAYLOAD_CHAR '*'
 #define MARIO_CHAR 'm'
 
-#include <iostream>
 Game::Game(std::string fmt)
+    : m_playerDirection(DirectionDown)
 {
     size_t p;
 
@@ -35,10 +35,12 @@ Game::Game(std::string fmt)
                     m_grid[i][j] = CellPayload;
                     break;
                 case MARIO_CHAR:
+                    m_grid[i][j] = CellEmpty;
                     m_playerPos.y = i;
                     m_playerPos.x = j;
                     break;
                 default:
+                    m_grid[i][j] = CellEmpty;
                     exit(1);
             }
         }
@@ -53,17 +55,41 @@ Game::~Game()
     delete []m_grid;
 }
 
-Game::Cell Game::get(int y, int x)
+void Game::move(Direction direction)
+{
+    m_playerDirection = direction;
+    switch (direction)
+    {
+        case DirectionUp:
+            m_playerPos.y--;
+            break;
+        case DirectionDown:
+            m_playerPos.y++;
+            break;
+        case DirectionLeft:
+            m_playerPos.x--;
+            break;
+        case DirectionRight:
+            m_playerPos.x++;
+    }
+}
+
+Game::Cell Game::get(int y, int x) const
 {
     return m_grid[y][x];
 }
 
-size_t Game::getHeight()
+size_t Game::getHeight() const
 {
     return m_height;
 }
 
-size_t Game::getWidth()
+size_t Game::getWidth() const
 {
     return m_width;
+}
+
+Game::Position const &Game::getPlayer() const
+{
+    return m_playerPos;
 }

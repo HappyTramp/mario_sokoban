@@ -26,21 +26,24 @@ public:
         CellPayload,
     };
 
-    Cell get(int y, int x);
-    size_t getHeight();
-    size_t getWidth();
-
-private:
-
     struct Position
     {
         int y, x;
     };
 
-    size_t m_width;
-    size_t m_height;
-    Cell **m_grid;
-    Position m_playerPos;
+    void     move(Direction direction);
+    Cell     get(int y, int x) const;
+    size_t   getHeight() const;
+    size_t   getWidth() const;
+    Position const &getPlayer() const;
+
+private:
+
+    size_t    m_width;
+    size_t    m_height;
+    Cell      **m_grid;
+    Position  m_playerPos;
+    Direction m_playerDirection;
 };
 
 #endif
